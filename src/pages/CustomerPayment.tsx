@@ -158,7 +158,7 @@ const CustomerPayment = () => {
       if (useWalletConnect) {
         // WalletConnect integration for mobile wallets
         const wcProvider = await EthereumProvider.init({
-          projectId: "2c8b5f8c4a2e4f9b8c1a3d5e6f7g8h9i", // Public project ID
+          projectId: "6f033f2737797ddd7f1907ba4c264474", // Public project ID
           chains: [42220], // Celo mainnet
           showQrModal: true,
           qrModalOptions: {
@@ -190,11 +190,15 @@ const CustomerPayment = () => {
         
         // Switch to Celo network
         try {
-          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]);
+          {/*await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]);*/}
+          // Celo mainnet
+          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xa4ec" }]); 
+          
+
         } catch (switchError: any) {
           if (switchError.code === 4902) {
             await provider.send("wallet_addEthereumChain", [{
-              chainId: "0xaef3",
+              chainId: "0xa4ec",
               chainName: "Celo Mainnet",
               nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
               rpcUrls: ["https://forno.celo.org"],
