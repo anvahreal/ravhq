@@ -158,14 +158,14 @@ const CustomerPayment = () => {
       if (useWalletConnect) {
         // WalletConnect integration for mobile wallets
         const wcProvider = await EthereumProvider.init({
-          projectId: "6f033f2737797ddd7f1907ba4c264474", // Public project ID
-          chains: [44787], // Celo mainnet
+          projectId: "", // Public project ID
+          chains: [42220], // Celo mainnet
           showQrModal: true,
           qrModalOptions: {
             themeMode: "light",
           },
           rpcMap: {
-            44787: "https://alfajores-forno.celo-testnet.org",
+            42220: "https://forno.celo.org",
           },
         });
 
@@ -188,46 +188,36 @@ const CustomerPayment = () => {
         provider = new ethers.BrowserProvider(window.ethereum);
         accounts = await provider.send("eth_requestAccounts", []);
         
-        // Switch to Celo network
-        
-          // Celo mainnet // Mainnet - Chain ID = 0xa4ec || Testnet - Chain ID = 0xaef3
-          {/*await provider.send("wallet_switchEthereumChain", [{ chainId: "0xa4ec" }]); 
-          
+        // Check network
+        const network = await provider.send("eth_chainId",[]);
+          if (network !== "0xaef3") {
+            toast({
+              title: "Wrong Network",
+              description: "Please switch to Celo Alfajore Testnet to continue.",
+              variant: "destructive"
+            });
+            return
+          }
 
-        } catch (switchError: any) {
-          if (switchError.code === 4902) {
-            await provider.send("wallet_addEthereumChain", [{
-              chainId: "0xa4ec",
-              chainName: "Celo Mainnet",
-              nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
-              rpcUrls: ["https://forno.celo.org"],
-              blockExplorerUrls: ["https://explorer.celo.org"],
-            }]);
-          } else {
-            throw switchError;
-          }
-        }
+        // Switch to Celo network
+    try {
+      await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]); // ✅ Celo Alfajores / Sepolia testnet
+    } catch (switchError: any) {
+      if (switchError.code === 4902) {
+        await provider.send("wallet_addEthereumChain", [{
+          chainId: "0xaef3",
+          chainName: "Celo Testnet",
+          nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
+          rpcUrls: ["https://alfajores-forno.celo-testnet.org"], // ✅ correct testnet RPC
+          blockExplorerUrls: ["https://alfajores.celoscan.io"],
+        }]);
+      } else {
+        throw switchError;
+      }      
+    }
+
         setWalletProvider(window.ethereum);
-      } 
-          */}
-        try {
-          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]); 
-          
-        } catch (switchError: any) {
-          if (switchError.code === 4902) {
-            await provider.send("wallet_addEthereumChain", [{
-              chainId: "0xaef3",
-              chainName: "Celo Alfajores Testnet",
-              nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
-              rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
-              blockExplorerUrls: ["https://alfajores.celoscan.io"],
-            }]);
-          } else {
-            throw switchError;
-          }
-        }
-        setWalletProvider(window.ethereum);
-      } 
+      }
 
       setWalletAddress(accounts[0]);
       toast({
@@ -322,6 +312,11 @@ const CustomerPayment = () => {
       // For demo: 1 USD = 1 CELO (you should use a real price feed)
       const celoAmount = ethers.parseEther(totalAmount.toString());
 
+      // ✅ Check wallet balance before sending
+      const balance = await provider.getBalance(await signer.getAddress());
+        if (balance < celoAmount) {
+          throw new Error("Insufficient CELO balance for payment.")};
+
       // Send transaction on Celo blockchain with security checks
       const tx = await signer.sendTransaction({
         to: merchantWalletAddress,
@@ -363,24 +358,26 @@ const CustomerPayment = () => {
           txHash: receipt.hash,
         },
       });
-    } catch (error: any) {
-      console.error("Payment error:", error);
-      
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation error",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Payment failed",
-          description: getErrorMessage(error),
-          variant: "destructive",
-        });
-      }
-      setLoading(false);
+  } catch (error: any) {
+    console.error("Payment error:", error);
+
+    if (error instanceof z.ZodError) {
+      toast({
+        title: "Validation error",
+        description: error.errors[0].message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Payment failed",
+        description: error.message || "Something went wrong.",
+        variant: "destructive",
+      });
     }
+  } finally {
+    setLoading(false);
+  }
+
   };
 
   if (loadingData) {
