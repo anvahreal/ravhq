@@ -159,13 +159,13 @@ const CustomerPayment = () => {
         // WalletConnect integration for mobile wallets
         const wcProvider = await EthereumProvider.init({
           projectId: "6f033f2737797ddd7f1907ba4c264474", // Public project ID
-          chains: [42220], // Celo mainnet
+          chains: [44787], // Celo mainnet
           showQrModal: true,
           qrModalOptions: {
             themeMode: "light",
           },
           rpcMap: {
-            42220: "https://forno.celo.org",
+            44787: "https://alfajores-forno.celo-testnet.org",
           },
         });
 
@@ -189,7 +189,7 @@ const CustomerPayment = () => {
         accounts = await provider.send("eth_requestAccounts", []);
         
         // Switch to Celo network
-        try {
+        
           // Celo mainnet // Mainnet - Chain ID = 0xa4ec || Testnet - Chain ID = 0xaef3
           {/*await provider.send("wallet_switchEthereumChain", [{ chainId: "0xa4ec" }]); 
           
@@ -210,17 +210,17 @@ const CustomerPayment = () => {
         setWalletProvider(window.ethereum);
       } 
           */}
-
-          await provider.send("wallet_switchEthereumChain", [{ chainId: "11142220" }]); 
+        try {
+          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]); 
           
         } catch (switchError: any) {
           if (switchError.code === 4902) {
             await provider.send("wallet_addEthereumChain", [{
-              chainId: "11142220",
+              chainId: "0xaef3",
               chainName: "Celo Alfajores Testnet",
-              nativeCurrency: { name: "Celo Testnet Token", symbol: "CELO", decimals: 18 },
-              rpcUrls: ["	https://forno.celo-sepolia.celo-testnet.org"],
-              blockExplorerUrls: ["https://celo-sepolia.blockscout.com"],
+              nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
+              rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
+              blockExplorerUrls: ["https://alfajores.celoscan.io"],
             }]);
           } else {
             throw switchError;
