@@ -190,16 +190,14 @@ const CustomerPayment = () => {
         
         // Switch to Celo network
         try {
-          {/*await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]);*/}
           // Celo mainnet // Mainnet - Chain ID = 0xa4ec || Testnet - Chain ID = 0xaef3
-
-          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]); 
+          {/*await provider.send("wallet_switchEthereumChain", [{ chainId: "0xa4ec" }]); 
           
 
         } catch (switchError: any) {
           if (switchError.code === 4902) {
             await provider.send("wallet_addEthereumChain", [{
-              chainId: "0xaef3",
+              chainId: "0xa4ec",
               chainName: "Celo Mainnet",
               nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
               rpcUrls: ["https://forno.celo.org"],
@@ -210,7 +208,26 @@ const CustomerPayment = () => {
           }
         }
         setWalletProvider(window.ethereum);
-      }
+      } 
+          */}
+
+          await provider.send("wallet_switchEthereumChain", [{ chainId: "11142220" }]); 
+          
+        } catch (switchError: any) {
+          if (switchError.code === 4902) {
+            await provider.send("wallet_addEthereumChain", [{
+              chainId: "11142220",
+              chainName: "Celo Alfajores Testnet",
+              nativeCurrency: { name: "Celo Testnet Token", symbol: "CELO", decimals: 18 },
+              rpcUrls: ["	https://forno.celo-sepolia.celo-testnet.org"],
+              blockExplorerUrls: ["https://celo-sepolia.blockscout.com"],
+            }]);
+          } else {
+            throw switchError;
+          }
+        }
+        setWalletProvider(window.ethereum);
+      } 
 
       setWalletAddress(accounts[0]);
       toast({
