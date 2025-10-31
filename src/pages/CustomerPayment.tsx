@@ -191,14 +191,15 @@ const CustomerPayment = () => {
         // Switch to Celo network
         try {
           {/*await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]);*/}
-          // Celo mainnet
-          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xa4ec" }]); 
+          // Celo mainnet // Mainnet - Chain ID = 0xa4ec || Testnet - Chain ID = 0xaef3
+
+          await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaef3" }]); 
           
 
         } catch (switchError: any) {
           if (switchError.code === 4902) {
             await provider.send("wallet_addEthereumChain", [{
-              chainId: "0xa4ec",
+              chainId: "0xaef3",
               chainName: "Celo Mainnet",
               nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
               rpcUrls: ["https://forno.celo.org"],
