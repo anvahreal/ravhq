@@ -207,7 +207,7 @@ const CustomerPayment = () => {
         await provider.send("wallet_addEthereumChain", [{
           chainId: "0xaa044c",
           chainName: "Celo Testnet",
-          nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
+          nativeCurrency: { name: "CELO SOPELIA", symbol: "CELO", decimals: 18 },
           rpcUrls: ["https://forno.celo-sepolia.celo-testnet.org"], // ✅ correct testnet RPC
           blockExplorerUrls: ["https://celo-sepolia.blockscout.com"],
         }]);
