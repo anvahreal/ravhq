@@ -190,10 +190,10 @@ const CustomerPayment = () => {
         
         // Check network
         const network = await provider.send("eth_chainId",[]);
-          if (network !== "11142220") {
+          if (network !== "44787") {
             toast({
               title: "Wrong Network",
-              description: "Please switch to Celo Sopelia Testnet to continue.",
+              description: "Please switch to Celo Alfajores Testnet to continue.",
               variant: "destructive"
             });
             return
