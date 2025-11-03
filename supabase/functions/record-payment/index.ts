@@ -1,5 +1,23 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.4';
 
+
+serve(async (req) => {
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*", // or "http://localhost:8080"
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  };
+
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  // your function logic here...
+  return new Response(JSON.stringify({ message: "Payment recorded" }), {
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+});
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
