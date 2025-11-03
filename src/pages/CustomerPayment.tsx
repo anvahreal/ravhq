@@ -201,15 +201,15 @@ const CustomerPayment = () => {
 
         // Switch to Celo network
     try {
-      await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaa044c" }]); // ✅ Celo Alfajores / Sepolia testnet
+      await provider.send("wallet_switchEthereumChain", [{ chainId: "44787" }]); // ✅ Celo Alfajores / Sepolia testnet
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         await provider.send("wallet_addEthereumChain", [{
-          chainId: "0xaa044c",
+          chainId: "44787",
           chainName: "Celo Testnet",
           nativeCurrency: { name: "CELO SOPELIA", symbol: "CELO", decimals: 18 },
-          rpcUrls: ["https://forno.celo-sepolia.celo-testnet.org"], // ✅ correct testnet RPC
-          blockExplorerUrls: ["https://celo-sepolia.blockscout.com"],
+          rpcUrls: ["https://alfajores-forno.celo-testnet.org"], // ✅ correct testnet RPC
+          blockExplorerUrls: ["https://alfajores.celoscan.io"],
         }]);
       } else {
         throw switchError;
