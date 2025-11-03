@@ -159,13 +159,13 @@ const CustomerPayment = () => {
         // WalletConnect integration for mobile wallets
         const wcProvider = await EthereumProvider.init({
           projectId: "6f033f2737797ddd7f1907ba4c264474", // Public project ID
-          chains: [42220], // Celo Mainnet
+          chains: [11142220], // Celo Mainnet
           showQrModal: true,
           qrModalOptions: {
             themeMode: "light",
           },
           rpcMap: {
-            42220: "https://forno.celo.org",
+            11142220: "https://forno.celo-sepolia.celo-testnet.org",
           },
         });
 
