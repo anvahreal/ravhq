@@ -190,10 +190,10 @@ const CustomerPayment = () => {
         
         // Check network
         const network = await provider.send("eth_chainId",[]);
-          if (network !== "44787") {
+          if (network !== "11142220") {
             toast({
               title: "Wrong Network",
-              description: "Please switch to Celo Alfajores Testnet to continue.",
+              description: "Please switch to Celo Sopelia Testnet to continue.",
               variant: "destructive"
             });
             return
@@ -201,14 +201,14 @@ const CustomerPayment = () => {
 
         // Switch to Celo network
     try {
-      await provider.send("wallet_switchEthereumChain", [{ chainId: "11142220" }]); // ✅ Celo Alfajores / Sepolia testnet
+      await provider.send("wallet_switchEthereumChain", [{ chainId: "0xaa254c" }]); // Sepolia testnet
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         await provider.send("wallet_addEthereumChain", [{
-          chainId: "11142220",
+          chainId: "0xaa254c",
           chainName: "Celo Testnet",
           nativeCurrency: { name: "CELO SOPELIA", symbol: "CELO", decimals: 18 },
-          rpcUrls: ["https://forno.celo-sepolia.celo-testnet.org"], // ✅ correct testnet RPC
+          rpcUrls: ["https://forno.celo-sepolia.celo-testnet.org"], // testnet RPC
           blockExplorerUrls: ["https://celo-sepolia.blockscout.com"],
         }]);
       } else {
