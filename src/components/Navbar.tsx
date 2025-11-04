@@ -41,7 +41,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <div className="w-20 h-20 bg-background rounded-lg flex items-center justify-center white">           
-            <img src="/rav-logo.png" alt="Ravlogo w-8 h-8"/>
+            <img src="/rav-logo.jpg" alt="Ravlogo w-8 h-8"/>
           </div>
           {/*<span className="text-xl font-bold text-foreground">Rav</span>*/}
         </Link>

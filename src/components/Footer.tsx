@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="sm:col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-3 sm:mb-4">
               <div className="w-20 h-20 bg-background rounded-lg flex items-center justify-center black">           
-            <img src="/rav-logo.png" alt="Ravlogo w-8 h-8"/>
+            <img src="/rav-logo.jpg" alt="Ravlogo w-8 h-8"/>
           </div>
             </Link>
             <p className="text-xs sm:text-sm text-muted-foreground">
