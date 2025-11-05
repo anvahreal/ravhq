@@ -189,15 +189,15 @@ const CustomerPayment = () => {
         accounts = await provider.send("eth_requestAccounts", []);
         
         // Check network
-        const network = await provider.send("eth_chainId",[]);
-          if (network !== "11142220") {
-            toast({
-              title: "Wrong Network",
-              description: "Please switch to Celo Sopelia Testnet to continue.",
-              variant: "destructive"
-            });
-            return
-          }
+        //const network = await provider.send("eth_chainId",[]);
+          //if (network !== "11142220") {
+           // toast({
+            //  title: "Wrong Network",
+              //description: "Please switch to Celo Sopelia Testnet to continue.",
+             // variant: "destructive"
+           // });
+            //return
+          //}
 
         // Switch to Celo network
     try {
