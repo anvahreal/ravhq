@@ -332,7 +332,7 @@ const CustomerPayment = () => {
       // ✅ Check wallet balance before sending
       const balance = await provider.getBalance(await signer.getAddress());
         if (balance < celoAmount) {
-          throw new Error("Insufficient CELO balance for payment.")};
+          throw new Error("Insufficient balance for payment.")};
 
       // Send transaction on Celo blockchain with security checks
       const tx = await signer.sendTransaction({
@@ -342,7 +342,7 @@ const CustomerPayment = () => {
 
       toast({
         title: "Transaction sent",
-        description: "Waiting for confirmation on Celo blockchain...",
+        description: "Waiting for confirmation on the blockchain...",
       });
 
       const receipt = await tx.wait();
@@ -458,24 +458,24 @@ const CustomerPayment = () => {
               <div className="space-y-3">
                 <Label className="text-sm">Connect Wallet</Label>
                 <div className="grid gap-3">
-<Button
-  className="w-full h-12 sm:h-14 text-base sm:text-lg"
-  onClick={() => connectWallet(false, "celo")}
-  disabled={isConnecting}
-  variant="outline"
->
-  {isConnecting ? (
-    <>
-      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-      Connecting...
-    </>
-  ) : (
-    <>
-      <Wallet className="w-5 h-5 mr-2" />
-      MetaMask (Celo)
-    </>
-  )}
-</Button>
+                <Button
+                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
+                  onClick={() => connectWallet(false, "celo")}
+                  disabled={isConnecting}
+                  variant="outline"
+                >
+                  {isConnecting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Connecting...
+                    </>
+                  ) : (
+                    <>
+                      <Wallet className="w-5 h-5 mr-2" />
+                      MetaMask (Celo)
+                    </>
+                  )}
+                </Button>
 
                 <Button
                   className="w-full h-12 sm:h-14 text-base sm:text-lg"
@@ -516,7 +516,7 @@ const CustomerPayment = () => {
                 </Button>
                 </div>
                 <p className="text-xs text-muted-foreground text-center">
-                  Connect your Celo wallet to make secure blockchain payments
+                  Connect your wallet to make secure blockchain payments
                 </p>
               </div>
             ) : (
@@ -664,7 +664,7 @@ const CustomerPayment = () => {
           </Card>
 
           <div className="mt-4 sm:mt-6 text-center text-xs sm:text-sm text-muted-foreground px-2">
-            <p>Powered by Celo blockchain • Instant settlement • Low fees</p>
+            <p>Powered by Celo && Base blockchain • Instant settlement • Low fees</p>
           </div>
         </div>
       </main>
