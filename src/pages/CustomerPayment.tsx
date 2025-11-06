@@ -22,6 +22,24 @@ interface Product {
   description: string | null;
   price: number;
 }
+// Supported networks
+const NETWORKS = {
+  celo: {
+    name: "Celo Sepolia Testnet",
+    chainId: "0x6A43B08", // 111557560
+    rpcUrl: "https://forno.celo-sepolia.celo-testnet.org",
+    explorer: "https://celo-sepolia.blockscout.com",
+    currency: { name: "Celo", symbol: "CELO", decimals: 18 },
+  },
+  base: {
+    name: "Base Sepolia Testnet",
+    chainId: "0x14A34", // 84532
+    rpcUrl: "https://sepolia.base.org",
+    explorer: "https://sepolia.basescan.org",
+    currency: { name: "Ethereum", symbol: "ETH", decimals: 18 },
+  },
+};
+
 
 // Validation schema for payment inputs
 const paymentSchema = z.object({
@@ -149,7 +167,10 @@ const CustomerPayment = () => {
     fetchMerchantData();
   }, [merchantId, toast]);
 
-  const connectWallet = async (useWalletConnect: boolean = false) => {
+  const connectWallet = async (
+    useWalletConnect: boolean = false,
+    network: "celo" | "base" = "celo"
+  ) => {
     setIsConnecting(true);
     try {
       let provider;
@@ -189,21 +210,28 @@ const CustomerPayment = () => {
         accounts = await provider.send("eth_requestAccounts", []);
       
         // Switch to Celo network
+    const selectedNet = NETWORKS[network];
+
     try {
-      await provider.send("wallet_switchEthereumChain", [{ chainId: "11142220" }]); // Sepolia testnet
+      await provider.send("wallet_switchEthereumChain", [
+        { chainId: selectedNet.chainId },
+      ]);
     } catch (switchError: any) {
       if (switchError.code === 4902) {
-        await provider.send("wallet_addEthereumChain", [{
-          chainId: "11142220",
-          chainName: "Celo Testnet",
-          nativeCurrency: { name: "CELO SOPELIA", symbol: "CELO", decimals: 18 },
-          rpcUrls: ["https://forno.celo-sepolia.celo-testnet.org"], // testnet RPC
-          blockExplorerUrls: ["https://celo-sepolia.blockscout.com"],
-        }]);
+        await provider.send("wallet_addEthereumChain", [
+          {
+            chainId: selectedNet.chainId,
+            chainName: selectedNet.name,
+            nativeCurrency: selectedNet.currency,
+            rpcUrls: [selectedNet.rpcUrl],
+            blockExplorerUrls: [selectedNet.explorer],
+          },
+        ]);
       } else {
         throw switchError;
-      }      
+      }
     }
+
 
         setWalletProvider(window.ethereum);
       }
@@ -430,42 +458,62 @@ const CustomerPayment = () => {
               <div className="space-y-3">
                 <Label className="text-sm">Connect Wallet</Label>
                 <div className="grid gap-3">
-                  <Button
-                    className="w-full h-12 sm:h-14 text-base sm:text-lg"
-                    onClick={() => connectWallet(false)}
-                    disabled={isConnecting}
-                    variant="outline"
-                  >
-                    {isConnecting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Connecting...
-                      </>
-                    ) : (
-                      <>
-                        <Wallet className="w-5 h-5 mr-2" />
-                        Browser Wallet (MetaMask)
-                      </>
-                    )}
-                  </Button>
-                  <Button
-                    className="w-full h-12 sm:h-14 text-base sm:text-lg"
-                    onClick={() => connectWallet(true)}
-                    disabled={isConnecting}
-                    variant="outline"
-                  >
-                    {isConnecting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Connecting...
-                      </>
-                    ) : (
-                      <>
-                        <Wallet className="w-5 h-5 mr-2" />
-                        WalletConnect (Mobile)
-                      </>
-                    )}
-                  </Button>
+<Button
+  className="w-full h-12 sm:h-14 text-base sm:text-lg"
+  onClick={() => connectWallet(false, "celo")}
+  disabled={isConnecting}
+  variant="outline"
+>
+  {isConnecting ? (
+    <>
+      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+      Connecting...
+    </>
+  ) : (
+    <>
+      <Wallet className="w-5 h-5 mr-2" />
+      MetaMask (Celo)
+    </>
+  )}
+</Button>
+
+                <Button
+                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
+                  onClick={() => connectWallet(false, "base")}
+                  disabled={isConnecting}
+                  variant="outline"
+                >
+                  {isConnecting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Connecting...
+                    </>
+                  ) : (
+                    <>
+                      <Wallet className="w-5 h-5 mr-2" />
+                      MetaMask (Base)
+                    </>
+                  )}
+                </Button>
+                  
+                <Button
+                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
+                  onClick={() => connectWallet(true)}
+                  disabled={isConnecting}
+                  variant="outline"
+                >
+                  {isConnecting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Connecting...
+                    </>
+                  ) : (
+                    <>
+                      <Wallet className="w-5 h-5 mr-2" />
+                      WalletConnect (Mobile)
+                    </>
+                  )}
+                </Button>
                 </div>
                 <p className="text-xs text-muted-foreground text-center">
                   Connect your Celo wallet to make secure blockchain payments
@@ -607,7 +655,7 @@ const CustomerPayment = () => {
                   ) : (
                     <>
                       <ShoppingCart className="w-5 h-5 mr-2" />
-                      Pay with Celo
+                      Make payment
                     </>
                   )}
                 </Button>
