@@ -36,7 +36,7 @@ const Success = () => {
               </h1>
               
               <p className="text-muted-foreground mb-8">
-                Your payment has been processed on the Celo blockchain
+                Your payment has been processed on the blockchain
               </p>
 
               <div className="bg-muted/50 p-6 rounded-lg mb-8 space-y-3">
@@ -90,7 +90,7 @@ const Success = () => {
           </Card>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p>Transaction recorded on Celo blockchain</p>
+            <p>Transaction recorded on the blockchain</p>
           </div>
         </div>
       </main>

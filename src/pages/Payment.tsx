@@ -104,7 +104,7 @@ const Payment = () => {
 
       toast({
         title: "Wallet saved!",
-        description: "Your Celo wallet address has been updated",
+        description: "Your Evm wallet address has been updated",
       });
       setIsEditingWallet(false);
     } catch (error: any) {
@@ -140,7 +140,7 @@ const Payment = () => {
                 <div className="flex items-center gap-2">
                   <Wallet className="w-5 h-5 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold text-foreground">
-                    Celo Wallet Address
+                    Evm Wallet Address
                   </h3>
                 </div>
               </div>
@@ -263,7 +263,7 @@ const Payment = () => {
           </div>
 
           <div className="mt-6 text-center text-xs sm:text-sm text-muted-foreground">
-            <p>Powered by Celo blockchain • Instant settlement • Low fees</p>
+            <p>Powered by blockchain • Instant settlement • Low fees</p>
           </div>
         </div>
       </main>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Wallet } from "lucide-react";
 
 const Footer = () => {
+  const year = new Date().getFullYear();
   return (
     <footer className="border-t bg-muted/30 mt-auto">
       <div className="container mx-auto px-4 py-6 sm:py-8">
@@ -37,7 +38,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t text-center text-xs sm:text-sm text-muted-foreground">
-          <p>&copy; 2025 Rav. All rights reserved. Powered by Celo blockchain.</p>
+          <p>&copy; {year} Rav. All rights reserved. Powered by blockchain.</p>
         </div>
       </div>
     </footer>

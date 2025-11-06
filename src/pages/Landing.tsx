@@ -83,7 +83,7 @@ const Landing = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-3 text-foreground">Trust</h3>
                 <p className="text-muted-foreground">
-                  Built on Celo blockchain with transparent, immutable transaction records.
+                  Built on blockchain with transparent, immutable transaction records.
                 </p>
               </div>
 
