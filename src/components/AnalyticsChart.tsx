@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface ChartData {
   day: string;
@@ -30,7 +31,7 @@ const AnalyticsChart = ({ data }: AnalyticsChartProps) => {
             </div>
           </div>
         ))}
-      </div>
+        </div>         
     </Card>
   );
 };

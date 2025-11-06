@@ -187,25 +187,14 @@ const CustomerPayment = () => {
 
         provider = new ethers.BrowserProvider(window.ethereum);
         accounts = await provider.send("eth_requestAccounts", []);
-        
-        // Check network
-        //const network = await provider.send("eth_chainId",[]);
-          //if (network !== "11142220") {
-           // toast({
-            //  title: "Wrong Network",
-              //description: "Please switch to Celo Sopelia Testnet to continue.",
-             // variant: "destructive"
-           // });
-            //return
-          //}
-
+      
         // Switch to Celo network
     try {
-      await provider.send("wallet_switchEthereumChain", [{ chainId: "0xA9F548" }]); // Sepolia testnet
+      await provider.send("wallet_switchEthereumChain", [{ chainId: "11142220" }]); // Sepolia testnet
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         await provider.send("wallet_addEthereumChain", [{
-          chainId: "0xA9F548",
+          chainId: "11142220",
           chainName: "Celo Testnet",
           nativeCurrency: { name: "CELO SOPELIA", symbol: "CELO", decimals: 18 },
           rpcUrls: ["https://forno.celo-sepolia.celo-testnet.org"], // testnet RPC
