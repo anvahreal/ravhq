@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "./ThemeToggle";
 
 const Navbar = () => {
   const location = useLocation();
@@ -59,6 +60,9 @@ const Navbar = () => {
               <Link to="/payment" className="text-foreground hover:text-primary transition-colors">
                 My QR Code
               </Link>
+              <div className="flex justify-start py-2">
+                <ThemeToggle/>
+              </div>
               <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -112,13 +116,19 @@ const Navbar = () => {
                     className="justify-start h-12"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
+                    
                     Logout
                   </Button>
                 </>
               ) : (
+                <>
+                <div className="flex justify-start py-2">
+                  <ThemeToggle/>
+                </div>
                 <Button asChild className="h-12">
                   <Link to="/auth" onClick={() => setIsOpen(false)}>Login</Link>
                 </Button>
+                </>
               )}
             </div>
           </SheetContent>
