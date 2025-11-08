@@ -486,7 +486,7 @@ const CustomerPayment = () => {
 
                     {/*Network seection popup*/}
                     {showNetworkOptions && (
-                      <div className="border rounded-lg bg-white shadow-md p-4 space-y-3 mt-2">
+                      <div className="border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-md p-4 space-y-3 mt-2 transition-colors">
                         <p className="text-sm font-medium text-center text-foreground">Select Network</p>
 
                         <button 
@@ -495,7 +495,7 @@ const CustomerPayment = () => {
                           setShowNetworkOptions(false);
                        }}
                        disabled={isConnecting}
-                       className="w-full"
+                       className="w-full border rounded-md px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                        variant="outline"
                         >
                           {isConnecting ? "connecting..." : "Base (Metamask)"}
@@ -507,7 +507,7 @@ const CustomerPayment = () => {
                           setShowNetworkOptions(false);
                        }}
                        disabled={isConnecting}
-                       className="w-full"
+                       className="w-full border rounded-md px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                        variant="outline"
                         >
                           {isConnecting ? "connecting..." : "Celo (Metamask)"}
