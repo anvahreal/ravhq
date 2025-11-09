@@ -25,12 +25,13 @@ interface Product {
 // Network configuration with stablecoin support
 const NETWORKS = {
   celo: {
-    name: "Celo Sopelia Testnet",
-    chainId: "0xA9D1FC",
-    rpcUrl: "https://forno.celo-sepolia.celo-testnet.org",
-    explorer: "https://celo-sepolia.blockscout.com",
+    name: "Celo Alfajores Testnet",
+    chainId: "0xAEF3",
+    rpcUrl: "https://alfajores-forno.celo-testnet.org",
+    explorer: "https://alfajores.celoscan.io",
     stablecoin: {
-      address: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", // cUSD on Sopelia
+      address: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", // cUSD on Alfajores
+      symbol: "cUSD",
       decimals: 18,
     },
   },
@@ -241,7 +242,7 @@ const CustomerPayment = () => {
             chainName: selectedNet.name,
             nativeCurrency: {
               name: selectedNet.stablecoin.symbol,
-              symbol: selectedNet.stablecoin.symbol,
+              symbol: selectedNet.stablecoin,symbol,
               decimals: selectedNet.stablecoin.decimals,
             },
             rpcUrls: [selectedNet.rpcUrl],
