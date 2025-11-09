@@ -17,13 +17,14 @@ const Success = () => {
     setTimeout(() => setAnimate(true), 100);
   }, []);
 
-    const explorerLinks = {
-    celo: "https://explorer.celo.org/tx/",
-    base: "https://basescan.org/tx/",
-    ethereum: "https://etherscan.io/tx/",
-    polygon: "https://polygonscan.com/tx/",
-    avalanche: "https://snowtrace.io/tx/",
-  };
+const explorerLinks = {
+  celo: "https://explorer.celo.org/alfajores/tx/", // Celo testnet
+  base: "https://sepolia.basescan.org/tx/",        // Base testnet
+  ethereum: "https://sepolia.etherscan.io/tx/",    // Ethereum testnet
+  polygon: "https://mumbai.polygonscan.com/tx/",   // Polygon testnet
+  avalanche: "https://testnet.snowtrace.io/tx/",   // Avalanche testnet
+};
+
 
   return (
     <div className="min-h-screen flex flex-col bg-muted/20">
