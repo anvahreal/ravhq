@@ -10,7 +10,8 @@ const Success = () => {
   const location = useLocation();
   const [animate, setAnimate] = useState(false);
   
-  const { amount = 0, reference = "N/A", txHash = null, network="celo" } = location.state || {};
+  const { amount, reference, txHash, network } = location.state || {};
+
 
   useEffect(() => {
     // Trigger animation on mount

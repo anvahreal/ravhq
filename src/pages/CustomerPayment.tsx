@@ -412,6 +412,7 @@ const CustomerPayment = () => {
           amount: totalAmount,
           reference: data.reference_id,
           txHash: receipt.hash,
+          network: selectedNetwork,
         },
       });
   } catch (error: any) {
