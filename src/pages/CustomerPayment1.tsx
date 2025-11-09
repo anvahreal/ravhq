@@ -26,14 +26,14 @@ interface Product {
 const NETWORKS = {
   celo: {
     name: "Celo Sepolia Testnet",
-    chainId: "11142220", // 111557560
+    chainId: "11142220", 
     rpcUrl: "https://forno.celo-sepolia.celo-testnet.org",
     explorer: "https://celo-sepolia.blockscout.com",
     currency: { name: "Celo", symbol: "CELO", decimals: 18 },
   },
   base: {
     name: "Base Sepolia Testnet",
-    chainId: "0x14A34", // 84532
+    chainId: "0x14A34", 
     rpcUrl: "https://sepolia.base.org",
     explorer: "https://sepolia.basescan.org",
     currency: { name: "Ethereum", symbol: "ETH", decimals: 18 },

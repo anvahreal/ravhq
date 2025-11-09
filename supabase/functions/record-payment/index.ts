@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    const referenceId = `${Date.now()}-${payload.txHash.slice(0, 8)}`
+    const referenceId = `CELO-${Date.now()}-${payload.txHash.slice(0, 8)}`
 
     const { data, error } = await supabase.from('transactions').insert({
       merchant_id: payload.merchantId,
