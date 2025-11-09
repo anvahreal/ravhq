@@ -10,12 +10,20 @@ const Success = () => {
   const location = useLocation();
   const [animate, setAnimate] = useState(false);
   
-  const { amount = 0, reference = "N/A", txHash = null } = location.state || {};
+  const { amount = 0, reference = "N/A", txHash = null, network="celo" } = location.state || {};
 
   useEffect(() => {
     // Trigger animation on mount
     setTimeout(() => setAnimate(true), 100);
   }, []);
+
+    const explorerLinks = {
+    celo: "https://explorer.celo.org/tx/",
+    base: "https://basescan.org/tx/",
+    ethereum: "https://etherscan.io/tx/",
+    polygon: "https://polygonscan.com/tx/",
+    avalanche: "https://snowtrace.io/tx/",
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-muted/20">
@@ -58,7 +66,7 @@ const Success = () => {
                   <div className="border-t pt-3">
                     <p className="text-xs text-muted-foreground mb-1">Blockchain Transaction</p>
                     <a 
-                      href={`https://explorer.celo.org/tx/${txHash}`}
+                      href={`${explorerLinks[network] || explorerLinks.celo}${txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-mono text-xs text-primary hover:underline break-all"
@@ -67,6 +75,13 @@ const Success = () => {
                     </a>
                   </div>
                 )}
+
+                  <div className="border-t pt-3">
+                    <p className="text-xs text-muted-foreground mb-1">Network</p>
+                    <p className="text-sm font-medium capitalize text-foreground">
+                      {network}
+                    </p>
+                </div>
 
                 <div className="border-t pt-3">
                   <p className="text-xs text-muted-foreground mb-1">Status</p>
