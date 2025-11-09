@@ -242,7 +242,7 @@ const CustomerPayment = () => {
             chainName: selectedNet.name,
             nativeCurrency: {
               name: selectedNet.stablecoin.symbol,
-              symbol: selectedNet.stablecoin,symbol,
+              symbol: selectedNet.stablecoin.symbol,
               decimals: selectedNet.stablecoin.decimals,
             },
             rpcUrls: [selectedNet.rpcUrl],
