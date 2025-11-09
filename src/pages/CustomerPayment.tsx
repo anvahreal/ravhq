@@ -26,7 +26,7 @@ interface Product {
 const NETWORKS = {
   celo: {
     name: "Celo Sopelia Testnet",
-    chainId: "11142220",
+    chainId: "0xAA36DC",
     rpcUrl: "https://forno.celo-sepolia.celo-testnet.org",
     explorer: "https://celo-sepolia.blockscout.com",
     stablecoin: {
@@ -242,7 +242,7 @@ const CustomerPayment = () => {
             chainName: selectedNet.name,
             nativeCurrency: {
               name: selectedNet.stablecoin.symbol,
-              symbol: selectedNet.stablecoin,symbol,
+              symbol: selectedNet.stablecoin.symbol,
               decimals: selectedNet.stablecoin.decimals,
             },
             rpcUrls: [selectedNet.rpcUrl],
