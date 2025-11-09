@@ -26,12 +26,11 @@ interface Product {
 const NETWORKS = {
   celo: {
     name: "Celo Sopelia Testnet",
-    chainId: "11142220",
+    chainId: "0xA9D1FC",
     rpcUrl: "https://forno.celo-sepolia.celo-testnet.org",
     explorer: "https://celo-sepolia.blockscout.com",
     stablecoin: {
-      address: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", // cUSD on Alfajores
-      symbol: "cUSD",
+      address: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", // cUSD on Sopelia
       decimals: 18,
     },
   },
