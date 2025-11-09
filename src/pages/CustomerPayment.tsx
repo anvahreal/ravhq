@@ -22,23 +22,39 @@ interface Product {
   description: string | null;
   price: number;
 }
-// Supported networks
+// Network configuration with stablecoin support
 const NETWORKS = {
   celo: {
-    name: "Celo Sepolia Testnet",
-    chainId: "11142220", // 111557560
-    rpcUrl: "https://forno.celo-sepolia.celo-testnet.org",
-    explorer: "https://celo-sepolia.blockscout.com",
-    currency: { name: "Celo", symbol: "CELO", decimals: 18 },
+    name: "Celo Alfajores Testnet",
+    chainId: "0xAEF3",
+    rpcUrl: "https://alfajores-forno.celo-testnet.org",
+    explorer: "https://alfajores.celoscan.io",
+    stablecoin: {
+      address: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", // cUSD on Alfajores
+      symbol: "cUSD",
+      decimals: 18,
+    },
   },
   base: {
     name: "Base Sepolia Testnet",
-    chainId: "0x14A34", // 84532
+    chainId: "0x14A34",
     rpcUrl: "https://sepolia.base.org",
     explorer: "https://sepolia.basescan.org",
-    currency: { name: "Ethereum", symbol: "ETH", decimals: 18 },
+    stablecoin: {
+      address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // USDC on Base Sepolia
+      symbol: "USDC",
+      decimals: 6,
+    },
   },
 };
+
+// ERC20 ABI for token transfers
+const ERC20_ABI = [
+  "function balanceOf(address owner) view returns (uint256)",
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
+]
 
 
 // Validation schema for payment inputs
@@ -74,6 +90,8 @@ const CustomerPayment = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [walletProvider, setWalletProvider] = useState<any>(null);
   const [showNetworkOptions, setShowNetworkOptions] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState<"celo" | "base">("celo");
+  const [showNetworkSelect, setShowNetworkSelect] = useState(false);
 
 
   useEffect(() => {
@@ -139,7 +157,7 @@ const CustomerPayment = () => {
         return;
       }
 
-      setMerchantName(profileData.merchant_name);
+      setMerchantName(profileData.merchant_name || "Merchant");
       setMerchantWalletAddress(profileData.wallet_address);
       
       // Merchant is verified if they have wallet set up and account exists
@@ -177,20 +195,18 @@ const CustomerPayment = () => {
     try {
       let provider;
       let accounts;
+      const selectedNet = NETWORKS[network];
       
       if (useWalletConnect) {
-        // WalletConnect integration for mobile wallets
-      
+        // WalletConnect integration for mobile wallets      
         const wcProvider = await EthereumProvider.init({
           projectId: "6f033f2737797ddd7f1907ba4c264474", // Public project ID
-          chains: [11142220], // Celo Testnet
+          chains: [parseInt(selectedNet.chainId, 16)],
           showQrModal: true,
           qrModalOptions: {
             themeMode: "light",
           },
-          rpcMap: {
-            11142220: "https://forno.celo-sepolia.celo-testnet.org",
-          },
+          rpcMap: { [parseInt(selectedNet.chainId, 16)]: selectedNet.rpcUrl },
         });
 
         await wcProvider.enable();
@@ -213,7 +229,6 @@ const CustomerPayment = () => {
         accounts = await provider.send("eth_requestAccounts", []);
       
         // Switch to Celo network
-    const selectedNet = NETWORKS[network];
 
     try {
       await provider.send("wallet_switchEthereumChain", [
@@ -225,7 +240,11 @@ const CustomerPayment = () => {
           {
             chainId: selectedNet.chainId,
             chainName: selectedNet.name,
-            nativeCurrency: selectedNet.currency,
+            nativeCurrency: {
+              name: selectedNet.stablecoin.symbol,
+              symbol: selectedNet.stablecoin,symbol,
+              decimals: selectedNet.stablecoin.decimals,
+            },
             rpcUrls: [selectedNet.rpcUrl],
             blockExplorerUrls: [selectedNet.explorer],
           },
@@ -235,13 +254,13 @@ const CustomerPayment = () => {
       }
     }
 
-
         setWalletProvider(window.ethereum);
       }
 
       
-
+      setSelectedNetwork(network);
       setWalletAddress(accounts[0]);
+      setShowNetworkSelect(false);
       toast({
         title: "Wallet connected securely",
         description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`,
@@ -326,23 +345,38 @@ const CustomerPayment = () => {
         return;
       }
 
-      // Process Celo payment
-      const provider = new ethers.BrowserProvider(walletProvider || window.ethereum);
+      // Process payment
+      const provider = new ethers.BrowserProvider(walletProvider);
       const signer = await provider.getSigner();
+
+      // Get stablecoin configuration
+      const network = NETWORKS[selectedNetwork];
+      const stablecoin = network.stablecoin;
+
+      // Create token contract instance
+      const tokenContract = new ethers.Contract(
+        stablecoin.address,
+        ERC20_ABI,
+        signer
+      );
 
       // Convert USD to CELO (simplified - in production use an oracle)
       // For demo: 1 USD = 1 CELO (you should use a real price feed)
-      const celoAmount = ethers.parseEther(totalAmount.toString());
-
+           // Calculate amount in stablecoin (1:1 with USD)
+      const totalAmount = product.price * quantity;
+      const tokenAmount = ethers.parseUnits(
+        totalAmount.toFixed(stablecoin.decimals),
+        stablecoin.decimals
+      );
       // ✅ Check wallet balance before sending
       const balance = await provider.getBalance(await signer.getAddress());
-        if (balance < celoAmount) {
+        if (balance < totalAmount) {
           throw new Error("Insufficient balance for payment.")};
 
       // Send transaction on Celo blockchain with security checks
       const tx = await signer.sendTransaction({
         to: merchantWalletAddress,
-        value: celoAmount,
+        value: tokenAmount,
       });
 
       toast({

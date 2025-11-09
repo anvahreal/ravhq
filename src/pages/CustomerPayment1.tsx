@@ -73,6 +73,8 @@ const CustomerPayment = () => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [walletProvider, setWalletProvider] = useState<any>(null);
+  const [showNetworkOptions, setShowNetworkOptions] = useState(false);
+
 
   useEffect(() => {
     const fetchMerchantData = async () => {
@@ -175,9 +177,10 @@ const CustomerPayment = () => {
     try {
       let provider;
       let accounts;
-
+      
       if (useWalletConnect) {
         // WalletConnect integration for mobile wallets
+      
         const wcProvider = await EthereumProvider.init({
           projectId: "6f033f2737797ddd7f1907ba4c264474", // Public project ID
           chains: [11142220], // Celo Testnet
@@ -235,6 +238,8 @@ const CustomerPayment = () => {
 
         setWalletProvider(window.ethereum);
       }
+
+      
 
       setWalletAddress(accounts[0]);
       toast({
@@ -457,64 +462,78 @@ const CustomerPayment = () => {
             {!walletAddress ? (
               <div className="space-y-3">
                 <Label className="text-sm">Connect Wallet</Label>
-                
-                <div className="grid gap-3">
-                <Button
-                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
-                  onClick={() => connectWallet(false, "celo")}
-                  disabled={isConnecting}
-                  variant="outline"
-                >
-                  {isConnecting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Connecting...
-                    </>
-                  ) : (
-                    <>
-                      <Wallet className="w-5 h-5 mr-2" />
-                      MetaMask (Celo)
-                    </>
-                  )}
-                </Button>
 
-                <Button
-                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
-                  onClick={() => connectWallet(false, "base")}
-                  disabled={isConnecting}
-                  variant="outline"
-                >
-                  {isConnecting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Connecting...
-                    </>
-                  ) : (
-                    <>
-                      <Wallet className="w-5 h-5 mr-2" />
-                      MetaMask (Base)
-                    </>
-                  )}
-                </Button>
-                  
-                <Button
-                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
-                  onClick={() => connectWallet(true)}
-                  disabled={isConnecting}
-                  variant="outline"
-                >
-                  {isConnecting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Connecting...
-                    </>
-                  ) : (
-                    <>
-                      <Wallet className="w-5 h-5 mr-2" />
-                      WalletConnect (Mobile)
-                    </>
-                  )}
-                </Button>
+                <div className="grid gap-3">
+                  <Button
+                      className="w-full h-12 sm:h-14 text-base sm:text-lg"
+                      onClick={() => setShowNetworkOptions(!showNetworkOptions)}
+                      disabled={isConnecting}
+                      variant="outline"
+                    >
+                      {isConnecting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Connecting...
+                        </>
+                      ) : (
+                        <>
+                          <Wallet className="w-5 h-5 mr-2" />
+                          Connect Wallet
+                        </>
+                      )}
+                    </Button>
+
+
+                    {/*Network seection popup*/}
+                    {showNetworkOptions && (
+                      <div className="border rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-md p-4 space-y-3 mt-2 transition-colors">
+                        <p className="text-sm font-medium text-center text-foreground">Select Network</p>
+
+                        <button 
+                        onClick={() => {
+                          connectWallet(false, "base");
+                          setShowNetworkOptions(false);
+                       }}
+                       disabled={isConnecting}
+                       className="w-full border rounded-md px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                       variant="outline"
+                        >
+                          {isConnecting ? "connecting..." : "Base (Metamask)"}
+                        </button>
+
+                        <button 
+                        onClick={() => {
+                          connectWallet(false, "celo");
+                          setShowNetworkOptions(false);
+                       }}
+                       disabled={isConnecting}
+                       className="w-full border rounded-md px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                       variant="outline"
+                        >
+                          {isConnecting ? "connecting..." : "Celo (Metamask)"}
+                        </button>
+                      </div>
+                    )}
+                    
+                    <Button
+                      className="w-full h-12 sm:h-14 text-base sm:text-lg"
+                      onClick={() => connectWallet(true)}
+                      disabled={isConnecting}
+                      variant="outline"
+                    >
+                      {isConnecting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Connecting...
+                        </>
+                      ) : (
+                        <>
+                          <Wallet className="w-5 h-5 mr-2" />
+                          WalletConnect (Mobile)
+                        </>
+                      )}
+                    </Button>
+                
                 </div>
                 <p className="text-xs text-muted-foreground text-center">
                   Connect your wallet to make secure blockchain payments
