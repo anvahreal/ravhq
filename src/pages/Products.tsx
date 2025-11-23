@@ -128,7 +128,10 @@ const Products = () => {
         }
         toast({ title: "Product updated successfully" });
       } else {
-        const { error } = await supabase.from("products").insert(productData);
+        // Wrap product data in an array
+        const { error } = await supabase
+        .from("products")
+        .insert([productData]);
 
         if (error) {
           toast({
