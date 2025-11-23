@@ -31,13 +31,21 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
+        // Clean up URL hash if present
+        if (window.location.hash) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
         navigate("/dashboard");
       }
     };
     checkUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
+      if (event === 'SIGNED_IN' && session) {
+        // Clean up URL hash
+        if (window.location.hash) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
         navigate("/dashboard");
       }
     });
@@ -51,7 +59,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
