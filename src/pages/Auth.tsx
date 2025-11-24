@@ -138,7 +138,7 @@ const Auth = () => {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="w-20 h-20 bg-background rounded-lg flex items-center justify-center black">           
-            <img src="/rav-logo.png" alt="Rav logo" className="w-20 h-20"/>
+            <img src="/rav-logo.png" alt="Rav logo" className="w-30 h-20"/>
           </div>
           </div>
           <CardTitle className="text-2xl">Welcome to Rav</CardTitle>
