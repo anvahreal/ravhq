@@ -22,6 +22,11 @@ interface Product {
   description: string | null;
   price: number;
 }
+interface MerchantProfile {
+  wallet_address: string;
+  email: string;
+  merchant_name: string;
+}
 // Network configuration with stablecoin support
 const NETWORKS = {
   celo: {
@@ -92,6 +97,7 @@ const CustomerPayment = () => {
   const [showNetworkOptions, setShowNetworkOptions] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState<"celo" | "base">("celo");
   const [showNetworkSelect, setShowNetworkSelect] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState("");
 
 
   useEffect(() => {
@@ -297,8 +303,6 @@ const CustomerPayment = () => {
       return;
     }
 
-    const totalAmount = product.price * quantity;
-
     try {
       const validationData = paymentSchema.parse({
         customerName: customerName,
@@ -331,9 +335,9 @@ const CustomerPayment = () => {
       // Security check: Verify merchant wallet hasn't changed
       const { data: merchantProfile } = await supabase
         .from("profiles")
-        .select("wallet_address")
+        .select("wallet_address, email, merchant_name")
         .eq("id", merchantId)
-        .maybeSingle();
+        .maybeSingle() as { data: MerchantProfile | null };;
 
       if (merchantProfile?.wallet_address !== merchantWalletAddress) {
         toast({
@@ -406,6 +410,35 @@ const CustomerPayment = () => {
       });
 
       if (error) throw error;
+
+        // send receipt emails 
+        try {
+          console.log("Sending emails with data:",{
+            customerEmail: customerEmail,
+            merchantEmail: merchantProfile?.email,
+          });
+
+          await supabase.functions.invoke("send-receipt-email", {
+            body: {
+              customerName: validationData.customerName,
+              customerEmail: customerEmail || undefined,
+              merchantName: merchantProfile?.merchant_name || merchantName,
+              merchantEmail: merchantProfile?.email,
+              productName: product?.name || "Product",
+              quantity: quantity,
+              unitPrice: product?.price || 0,
+              totalAmount: totalAmount,
+              txHash: receipt.hash,
+              network: selectedNetwork,
+              referenceId: data.reference_id,
+              paymentDate: new Date().toLocaleString(),
+            },
+          });
+
+          console.log("Receipt emails sent successfully");
+        } catch (emailError) {
+          console.error("Failed to send receipt emails", emailError);
+        }
 
       navigate("/success", {
         state: {
@@ -590,6 +623,21 @@ const CustomerPayment = () => {
                   >
                     Disconnect
                   </Button>
+                </div>
+
+                <div>
+                  <Label htmlFor="customerEmail" className="text-sm">Email (Optional - for receipt)</Label>                                   
+                  <Input 
+                  type="email" 
+                  id="customerEmail" 
+                  value={customerEmail} 
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  placeholder="Your@email.com"
+                  className="mt-2 h-11"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Enter your email to receive a payment receipt
+                  </p>
                 </div>
 
                 <div>
