@@ -110,7 +110,7 @@ const Auth = () => {
 
         toast({
           title: "Account created!",
-          description: "Welcome to Rav. Redirecting to dashboard...",
+          description: `Welcome ${merchantName} ..`,
         });
       }
     } catch (error: any) {

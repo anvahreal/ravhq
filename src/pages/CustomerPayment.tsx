@@ -364,9 +364,7 @@ const CustomerPayment = () => {
         signer
       );
 
-      // Convert USD to CELO (simplified - in production use an oracle)
-      // For demo: 1 USD = 1 CELO (you should use a real price feed)
-           // Calculate amount in stablecoin (1:1 with USD)
+      // Calculate amount in stablecoin (1:1 with USD)
       const totalAmount = product.price * quantity;
       const tokenAmount = ethers.parseUnits(
         totalAmount.toFixed(stablecoin.decimals),

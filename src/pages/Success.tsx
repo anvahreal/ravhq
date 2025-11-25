@@ -94,15 +94,15 @@ const explorerLinks = {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              {/*<div className="space-y-3">
                 <Button className="w-full h-12" asChild>
                   <Link to="/dashboard">Back to Dashboard</Link>
                 </Button>
                 
                 <Button variant="outline" className="w-full" asChild>
-                  <Link to="/payment">New Payment</Link>
+                  <Link to="/pay/:merchantId">New Payment</Link>
                 </Button>
-              </div>
+              </div>*/}
             </div>
           </Card>
 

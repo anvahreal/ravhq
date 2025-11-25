@@ -21,6 +21,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      // Step 1: Check if user is authenticated
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({
@@ -32,10 +33,31 @@ const Dashboard = () => {
         return;
       }
 
-      // Fetch transactions for current merchant only (RLS handles filtering)
+      // Step 2: Check if profile setup is complete
+      const { data: {user} } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("merchant_name")
+          .eq("id", user.id)
+          .single();
+
+        // If no merchant name or it's the default, redirect to setup
+        if (!profile?.merchant_name || profile.merchant_name === '') {
+          navigate("/setup-profile");
+          return; // Stop here, don't load dashboard data
+        }
+      }
+
+      // Step 3: Fetch transactions for current merchant only (RLS handles filtering)
       const { data: txData, error } = await supabase
         .from("transactions")
-        .select("*")
+        .select(`
+          *,
+          products (
+            name
+          )
+        `)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -55,6 +77,10 @@ const Dashboard = () => {
         amount: Number(tx.amount),
         date: new Date(tx.created_at).toLocaleString(),
         status: tx.status as "completed" | "pending",
+        txHash: tx.tx_hash || undefined,
+        network: undefined,
+        productName: tx.products?.name || "Product",
+        quantity: tx.quantity || 1,
       }));
 
       setTransactions(formattedTx);
@@ -120,6 +146,7 @@ const Dashboard = () => {
 
       setChartData(dailyData);
     };
+
     checkAuth();
   }, [navigate, toast]);
 
@@ -154,8 +181,6 @@ const Dashboard = () => {
               </Button>
             </div>
           </Card>
-
-          
 
           <Card className="p-6">
             <div className="flex items-start justify-between mb-2">
