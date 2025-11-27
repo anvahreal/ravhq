@@ -53,81 +53,109 @@ const TransactionList = ({ transactions }: TransactionListProps) => {
           }
           body {
             font-family: 'Courier New', monospace;
-            padding: 40px;
-            max-width: 400px;
+            padding: 20px;  /* Reduced from 40px */
+            max-width: 100%;  /* Changed from 400px */
             margin: 0 auto;
             background: white;
           }
           .receipt {
             border: 2px dashed #000;
-            padding: 30px;
+            padding: 20px;  /* Reduced from 30px */
+            max-width: 400px;  /* Add max-width here instead */
+            margin: 0 auto;
           }
           .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;  /* Reduced from 30px */
             border-bottom: 2px solid #000;
-            padding-bottom: 20px;
+            padding-bottom: 15px;  /* Reduced from 20px */
           }
           .logo {
-            font-size: 28px;
+            font-size: 24px;  /* Reduced from 28px */
             font-weight: bold;
             margin-bottom: 10px;
             letter-spacing: 2px;
           }
           .title {
-            font-size: 18px;
+            font-size: 16px;  /* Reduced from 18px */
             font-weight: bold;
             margin-top: 10px;
           }
           .section {
-            margin: 20px 0;
-            padding: 15px 0;
+            margin: 15px 0;  /* Reduced from 20px */
+            padding: 12px 0;  /* Reduced from 15px */
             border-bottom: 1px dashed #999;
           }
           .row {
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
-            font-size: 14px;
+            margin: 6px 0;  /* Reduced from 8px */
+            font-size: 13px;  /* Reduced from 14px */
+            flex-wrap: wrap;  /* Allow wrapping on small screens */
           }
           .label {
             font-weight: bold;
+            margin-right: 8px;
           }
           .total {
-            margin-top: 20px;
-            padding-top: 15px;
+            margin-top: 15px;  /* Reduced from 20px */
+            padding-top: 12px;  /* Reduced from 15px */
             border-top: 2px solid #000;
           }
           .total-row {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
+            font-size: 16px;  /* Reduced from 18px */
             font-weight: bold;
-            margin: 10px 0;
+            margin: 8px 0;  /* Reduced from 10px */
+            flex-wrap: wrap;
           }
           .footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: 20px;  /* Reduced from 30px */
+            padding-top: 15px;  /* Reduced from 20px */
             border-top: 2px solid #000;
-            font-size: 12px;
+            font-size: 11px;  /* Reduced from 12px */
           }
           .blockchain {
             background: #f5f5f5;
-            padding: 10px;
-            margin: 15px 0;
-            font-size: 11px;
+            padding: 8px;  /* Reduced from 10px */
+            margin: 12px 0;  /* Reduced from 15px */
+            font-size: 10px;  /* Reduced from 11px */
             word-break: break-all;
           }
           .status {
-            display: inline-block;
-            padding: 4px 12px;
+           display: inline-block;
+            padding: 3px 10px;  /* Reduced from 4px 12px */
             background: ${transaction.status === 'completed' ? '#22c55e' : '#eab308'};
             color: white;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;  /* Reduced from 12px */
             font-weight: bold;
           }
+  
+          /* Mobile optimizations */
+          @media (max-width: 480px) {
+            body {
+              padding: 10px;
+            }
+            .receipt {
+              padding: 15px;
+            }
+            .logo {
+              font-size: 20px;
+            }
+            .title {
+              font-size: 14px;
+            }
+            .row {
+              font-size: 12px;
+            }
+            .total-row {
+              font-size: 14px;
+            }
+          }
+  
           @media print {
             body {
               padding: 0;
@@ -141,7 +169,7 @@ const TransactionList = ({ transactions }: TransactionListProps) => {
       <body>
         <div class="receipt">
           <div class="header">
-            <div class="logo">RAV PAY</div>
+            <div class="logo">RAVGATEWAY</div>
             <div style="font-size: 12px; margin-top: 5px;">Blockchain Payment System</div>
             <div class="title">PAYMENT RECEIPT</div>
           </div>
@@ -189,7 +217,7 @@ const TransactionList = ({ transactions }: TransactionListProps) => {
 
           ${transaction.txHash && transaction.network ? `
           <div class="section">
-            <div style="font-weight: bold; margin-bottom: 10px;">🔒 Blockchain Verification</div>
+            <div style="font-weight: bold; margin-bottom: 10px;"> Blockchain Verification</div>
             <div class="row">
               <span class="label">Network:</span>
               <span>${transaction.network === 'celo' ? 'Celo' : 'Base'} Testnet</span>
@@ -295,17 +323,20 @@ const TransactionList = ({ transactions }: TransactionListProps) => {
           </div>
 
           {hasMore && (
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <Button 
                 variant="outline" 
-                className="flex-1"
+                className="flex-1 w-full"
                 onClick={loadMore}
               >
                 <ChevronDown className="w-4 h-4 mr-2" />
-                Load More ({transactions.length - visibleCount} remaining)
+                <span className="text-sm sm:text-base">
+                  Load More ({transactions.length - visibleCount} remaining)
+                </span>
               </Button>
               <Button 
                 variant="ghost" 
+                className="w-full sm:w-auto"
                 onClick={showAll}
               >
                 Show All
