@@ -42,8 +42,11 @@ const Dashboard = () => {
           .eq("id", user.id)
           .single();
 
-        // If no merchant name or it's the default, redirect to setup
-        if (!profile?.merchant_name || profile.merchant_name === '') {
+        // If no merchant name or it's the default, let it redirect to setup
+        if (!profile?.merchant_name ||
+            profile.merchant_name === '' ||
+            profile.merchant_name === 'Merchant' ||
+            profile.merchant_name.trim() === ''){
           navigate("/setup-profile");
           return; // Stop here, don't load dashboard data
         }

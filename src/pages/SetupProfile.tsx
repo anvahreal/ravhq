@@ -34,7 +34,10 @@ const SetupProfile = () => {
       .eq("id", session.user.id)
       .single();
 
-    if (profile?.merchant_name) {
+    if (profile?.merchant_name &&
+      profile.merchant_name !== '' && 
+      profile.merchant_name !== 'Merchant' &&
+      profile.merchant_name.trim() !== '') {
       // Already set up, redirect to dashboard
       navigate("/dashboard");
       return;
@@ -44,43 +47,71 @@ const SetupProfile = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!merchantName.trim()) {
-      toast({
-        title: "Business name required",
-        description: "Please enter your business name",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({ merchant_name: merchantName.trim() })
-      .eq("id", session.user.id);
-
-    if (error) {
-      toast({
-        title: "Error updating profile",
-        description: error.message,
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
+  if (!merchantName.trim()) {
     toast({
-      title: "Profile completed!",
-      description: "Welcome to RAV Payment System",
+      title: "Business name required",
+      description: "Please enter your business name",
+      variant: "destructive",
     });
+    return;
+  }
 
-    navigate("/dashboard");
+  setLoading(true);
+
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    toast({
+      title: "Not authenticated",
+      description: "Please log in again",
+      variant: "destructive",
+    });
+    navigate("/auth");
+    return;
+  }
+
+  console.log("Attempting to update merchant_name to:", merchantName.trim());
+  console.log("For user ID:", session.user.id);
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ merchant_name: merchantName.trim() })
+    .eq("id", session.user.id)
+    .select(); // Add select to return the updated row
+
+  console.log("Update response:", { data, error });
+
+  if (error) {
+    console.error("Update error:", error);
+    toast({
+      title: "Error updating profile",
+      description: error.message,
+      variant: "destructive",
+    });
+    setLoading(false);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    console.error("No rows updated");
+    toast({
+      title: "Update failed",
+      description: "Profile was not updated. Please try again.",
+      variant: "destructive",
+    });
+    setLoading(false);
+    return;
+  }
+
+  console.log("Successfully updated profile:", data);
+
+  toast({
+    title: "Profile completed!",
+    description: "Welcome to RAV Payment System",
+  });
+
+  navigate("/dashboard");
   };
 
   if (checking) {
